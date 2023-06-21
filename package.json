@@ -1,0 +1,28 @@
+{
+  "scripts": {
+    "start": "node index.js"
+  },
+   "dependencies": {
+     "@whiskeysockets/baileys": "^6.3.0",
+     "@adiwajshing/keyed-db": "^0.2.4",
+     "@bochilteam/scraper": "^4.2.3",
+     "axios": "^0.27.2",
+     "caliph-api": "^1.0.0",
+     "chalk": "^4.1.0",
+     "child_process": "^1.0.2",
+     "cheerio": "^1.0.0-rc.12",
+     "fluent-ffmpeg": "^2.1.2",
+     "form-data": "^4.0.0",
+     "fs": "0.0.1-security",
+     "jsdom": "latest",
+     "moment-timezone": "^0.5.34",
+     "node-fetch": "^2.6.7",
+     "odesus": "^1.1.1",
+     "path": "^0.12.7",
+     "pino": "^7.0.5",
+     "qrcode-terminal": "^0.12.0",
+     "stream": "^0.0.2",
+     "util": "^0.12.3",
+     "xfarr-api": "^2.0.0"
+  }
+}
