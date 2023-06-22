@@ -115,7 +115,7 @@ const isGroupAdmins = groupAdmins.includes(sender);
 const botId = sock.user.id.includes(':') ? sock.user.id.split(':')[0] + '@s.whatsapp.net' : sock.user.id;
 const isBotGroupAdmins = groupMetadata && groupAdmins.includes(botId);
 const isOwner = ownerNumber.includes(sender);
-const isCmd = /^[?]/.test(body);
+const isCmd = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\\\©^]/.test(body);
 const prefix = isCmd ? body[0] : '';
 const args = body.trim().split(/ +/).slice(1);
 
