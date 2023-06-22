@@ -423,10 +423,13 @@ case 'join':
   if (!q) {
     return reply(`Contoh:\n${prefix + command} URL`);
   }
-  let result = args[0].split('https://chat.whatsapp.com/')[1];
-  await sock.groupAcceptInvite(result)
-    .then((res) => reply(jsonformat(res)))
-    .catch((err) => reply(jsonformat(err)));
+  try {
+    let result = args[0].split('https://chat.whatsapp.com/')[1];
+    const res = await sock.groupAcceptInvite(result);
+    reply(jsonformat(res));
+  } catch (err) {
+    reply(jsonformat(err));
+  }
   break;
 case 'sticker':
 case 's':
