@@ -285,7 +285,7 @@ function parseMs(ms) {
     switch (command) {
 case 'help':
   reply(`
-  Hi, *YanfeiBOT* In Here!
+  Hi, *${botName}* In Here!
   
   • *DOWNLOADER*
     › ${prefix}igdl
@@ -343,7 +343,7 @@ case 'instagram':
         if (i.type === "video") {
           sock.sendMessage(from, { video: { url: i.url }}, { quoted: msg });
         } else if (i.type === "image") {
-          sock.sendMessage(from, { caption: `😅🙏🏽`, image: { url: i.url }}, { quoted: msg });
+          sock.sendMessage(from, { caption: "¯\\_(ツ)_/¯", image: { url: i.url }}, { quoted: msg });
         }
       }
     })
@@ -758,7 +758,7 @@ case 'ssweb':
   reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
     image: { url: `https://image.thum.io/get/width/1900/crop/1000/fullpage/${q}` },
-    caption: `😅🙏🏽`
+    caption: "¯\\_(ツ)_/¯"
   }, { quoted: msg });
   break;
 case 'sticker':
@@ -818,7 +818,7 @@ case 'waifu':
     const data = response.data.url;
     sock.sendMessage(from, {
     image: { url: data },
-    caption: `😅🙏🏽`
+    caption: "¯\\_(ツ)_/¯"
   }, { quoted: msg });
   } catch (error) {
     console.error('Error:', error);
