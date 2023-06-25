@@ -609,7 +609,7 @@ case 'setnamegroup':
   /* Maker */
 case 'comic-logo':
   if (!q) {
-    return reply(`Contoh:\n${prefix + command} Yanfei`);
+    return reply(`Contoh:\n${prefix+command+" "+botName}`);
   }
   sock.sendMessage(from, {
     caption: q,
@@ -620,7 +620,7 @@ case 'comic-logo':
   break;
 case 'runner-logo':
   if (!q) {
-    return reply(`Contoh:\n${prefix + command} Yanfei`);
+    return reply(`Contoh:\n${prefix+command+" "+botName}`);
   }
   reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
@@ -632,7 +632,7 @@ case 'runner-logo':
   break;
 case 'starwars-logo':
   if (!q) {
-    return reply(`Contoh:\n${prefix + command} Yanfei`);
+    return reply(`Contoh:\n${prefix+command+" "+botName}`);
   }
   reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
@@ -644,7 +644,7 @@ case 'starwars-logo':
   break;
 case 'style-logo':
   if (!q) {
-    return reply(`Contoh:\n${prefix + command} Yanfei`);
+    return reply(`Contoh:\n${prefix+command+" "+botName}`);
   }
   reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
@@ -656,7 +656,7 @@ case 'style-logo':
   break;
 case 'water-logo':
   if (!q) {
-    return reply(`Contoh:\n${prefix + command} Yanfei`);
+    return reply(`Contoh:\n${prefix+command+" "+botName}`);
   }
   reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
@@ -847,6 +847,10 @@ if (body.startsWith('>')) {
     await reply(e);
   }
 }
+
+  if (isCmd) {
+	  reply(`Sorry bro, command *${prefix+command}* gk ada di list *${prefix}help*`);
+  }
        }
    })
 }
