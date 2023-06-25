@@ -712,6 +712,7 @@ case 'infogempa':
     url: result.image
   };
   delete result.image;
+  reply(`Tunggu sebentar..`);
   sock.sendMessage(from, {
     image,
     caption: parseRes(result, {
