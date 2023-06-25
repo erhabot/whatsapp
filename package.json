@@ -1,8 +1,9 @@
 {
-  "scripts": {
-    "start": "node index.js"
-  },
-   "dependencies": {
+  "name": "RH BOT",
+  "version": "1.0",
+  "description": "Whatsapp Bot - NodeJs",
+  "main": "index.js",
+  "dependencies": {
      "baileys": "^6.0.9",
      "@adiwajshing/keyed-db": "^0.2.4",
      "@bochilteam/scraper": "^4.2.3",
@@ -25,5 +26,24 @@
      "util": "^0.12.3",
      "xfarr-api": "^2.0.0",
      "yt-search": "^2.10.4"
-  }
+  },
+  "scripts": {
+    "dev": "nodemon --exec \"cls && node .\" --ignore \"*.json\" --ignore \"test/*.js\"",
+	"start": "node index.js"
+  },
+  "author": "W a N",
+  "license": "MIT",
+  "keywords": [
+    "whatsapp",
+    "bot",
+    "base"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/erhabot/whatsapp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/erhabot/whatsapp/issues"
+  },
+  "homepage": "https://github.com/erhabot/whatsapp#readme"
 }

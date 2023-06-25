@@ -1,9 +1,4 @@
-/**
-  * Script Amburadul Ga Karuan
-  * Created By NathanaeL
-  * https://wa.me/6289652948525
-**/
-
+"use strict";
 const { default: WAConnection, useMultiFileAuthState, generateWAMessageFromContent, getContentType, downloadContentFromMessage, makeCacheableSignalKeyStore } = require('baileys');
 const pino = require('pino');
 const fetch = require('node-fetch');
@@ -26,9 +21,9 @@ const { PassThrough } = require('stream');
 const { watchFile } = require('fs');
 const { exec } = require('child_process');
 
-const parseRes = require('./database/lib/parseres.js');
-const resolveDesuUrl = require('./resolve-desu-url.js');
-const resolveBufferStream = require('./resolve-buffer-stream.js');
+const parseRes = require('./lib/parseres');
+const resolveDesuUrl = require('./lib/resolve-desu-url');
+const resolveBufferStream = require('./lib/resolve-buffer-stream');
 
 const color = (text, color) => {
   return !color ? chalk.green(text) : chalk.keyword(color)(text);
@@ -41,7 +36,7 @@ const level = pino({ level: 'silent' })
 const sock = WAConnection({
   logger: level,
   printQRInTerminal: true,
-  browser: ['Yanfei', 'Firefox', '3.0.0'],
+  browser: ['RH STORE', 'Firefox', '3.0.0'],
   auth: {
     creds: state.creds,
     keys: makeCacheableSignalKeyStore(state.keys, level),
@@ -68,7 +63,9 @@ sock.ev.on('creds.update', saveCreds);
 sock.ev.on('messages.upsert', async m => {
 const time = moment().tz('Asia/Jakarta').format('HH:mm:ss')
 
-const { ownerNumber, ownerName, botName, otakudesuUrl } = require('./config.json');
+const { ownerNumber, ownerName, botName } = require('./config.json');
+
+const otakudesuUrl = "https://otakudesu.lol";
 const ods = new Odesus(otakudesuUrl);
 
 if (!m.messages) return;
@@ -286,7 +283,7 @@ function parseMs(ms) {
   if (isGroup && isCmd) console.log(color(`[ ${time} ]`, 'white'), color('[ COMMAND ]', 'aqua'), color(body, 'white'), 'from', color(senderNumber, 'yellow'), 'in', color(groupName, 'yellow'))
 	
     switch (command) {
-case 'menu':
+case 'help':
   reply(`
   Hi, *YanfeiBOT* In Here!
   
@@ -830,7 +827,7 @@ case 'waifu':
   break;
   default:
   if (!isOwner) return
-if (body.startsWith('>')) {
+if (body.startsWith('<')) {
   try {
     let value = await eval(`(async () => { ${body.slice(1)} })()`);
     await reply(format(value));
@@ -840,7 +837,7 @@ if (body.startsWith('>')) {
 }
 
   if (!isOwner) return
-if (body.startsWith('<')) {
+if (body.startsWith('>')) {
   try {
     let value = await eval(`(async () => { return ${body.slice(1)} })()`);
     await reply(format(value));
