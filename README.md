@@ -13,9 +13,9 @@
 
 ## Windows
 
--   [`Download ffmpeg`](https://ffmpeg.org/download.html#build-windows) and set path
--   [`Download Node JS`](https://nodejs.org/en/download/)
--   [`Download Git`](https://git-scm.com/downloads)
+- [`Download ffmpeg`](https://ffmpeg.org/download.html#build-windows) and set path
+- [`Download Node JS`](https://nodejs.org/en/download/)
+- [`Download Git`](https://git-scm.com/downloads)
 
 ## Linux
 
@@ -57,9 +57,9 @@
 
 ## Note:
 
--   You can help me add case by doing pull requests.
+- You can help me add case by doing pull requests.
 
 # Thanks To
 
--   [`Baileys`](https://github.com/adiwajshing/Baileys)
--   [`NathanaeL`](https://github.com/natgvlite/)
+- [`Baileys`](https://github.com/adiwajshing/Baileys)
+- [`NathanaeL`](https://github.com/natgvlite/)
