@@ -816,6 +816,7 @@ case 'waifu':
   try {
     const response = await axios.get('https://waifu.pics/api/sfw/waifu');
     const data = response.data.url;
+	reply(`Tunggu sebentar..`);
     sock.sendMessage(from, {
     image: { url: data },
     caption: "¯\\_(ツ)_/¯"

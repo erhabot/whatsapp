@@ -1,11 +1,10 @@
 *-session.json
 *-session
-package-lock.json
+session
 fitur.txt
 .prettierrc
 .vscode
 node_modules
 store/baileys_store.json
-config.json
 nodemon.*
 tests/
