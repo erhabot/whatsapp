@@ -283,7 +283,7 @@ function parseMs(ms) {
   if (isGroup && isCmd) console.log(color(`[ ${time} ]`, 'white'), color('[ COMMAND ]', 'aqua'), color(body, 'white'), 'from', color(senderNumber, 'yellow'), 'in', color(groupName, 'yellow'))
 	
     switch (command) {
-case 'help':
+case 'help': case 'menu':
   reply(`
   Hi, *${botName}* In Here!
   
