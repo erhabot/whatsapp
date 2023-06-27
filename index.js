@@ -1,12 +1,5 @@
 "use strict";
-const {
-  default: WAConnection,
-  useMultiFileAuthState,
-  generateWAMessageFromContent,
-  getContentType,
-  downloadContentFromMessage,
-  makeCacheableSignalKeyStore,
-} = require("baileys");
+const { default: WAConnection, useMultiFileAuthState, generateWAMessageFromContent, getContentType, downloadContentFromMessage, makeCacheableSignalKeyStore } = require("baileys");
 const pino = require("pino");
 const fetch = require("node-fetch");
 const axios = require("axios");
@@ -70,12 +63,7 @@ const start = async () => {
   sock.ev.on("messages.upsert", async (m) => {
     const time = moment().tz("Asia/Jakarta").format("HH:mm:ss");
 
-    const {
-      ownerNumber,
-      ownerName,
-      botName,
-      apikey,
-    } = require("./config.json");
+    const { ownerNumber, ownerName, botName, apikey } = require("./config.json");
 
     const otakudesuUrl = "https://otakudesu.lol";
     const ods = new Odesus(otakudesuUrl);
@@ -85,18 +73,10 @@ const start = async () => {
     const msg = m.messages[0];
     const from = msg.key.remoteJid;
     const type = getContentType(msg.message);
-    const quotedType =
-      getContentType(
-        msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage
-      ) || null;
+    const quotedType = getContentType(msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage) || null;
 
     if (type === "ephemeralMessage") {
-      if (
-        msg &&
-        msg.message &&
-        msg.message.ephemeralMessage &&
-        msg.message.ephemeralMessage.message
-      ) {
+      if (msg && msg.message && msg.message.ephemeralMessage && msg.message.ephemeralMessage.message) {
         msg.message = msg.message.ephemeralMessage.message;
         if (msg.message.viewOnceMessage) {
           msg.message = msg.message.viewOnceMessage;
@@ -110,20 +90,11 @@ const start = async () => {
       }
     }
 
-    const body =
-      type === "imageMessage" || type === "videoMessage"
-        ? msg.message[type].caption
-        : type === "conversation"
-        ? msg.message[type]
-        : type === "extendedTextMessage"
-        ? msg.message[type].text
-        : "";
+    const body = type === "imageMessage" || type === "videoMessage" ? msg.message[type].caption : type === "conversation" ? msg.message[type] : type === "extendedTextMessage" ? msg.message[type].text : "";
 
     const isGroup = from.endsWith("@g.us");
     let sender = isGroup ? msg.key.participant : from;
-    sender = sender.includes(":")
-      ? sender.split(":")[0] + "@s.whatsapp.net"
-      : sender;
+    sender = sender.includes(":") ? sender.split(":")[0] + "@s.whatsapp.net" : sender;
     const senderName = msg.pushName;
     const senderNumber = sender.split("@")[0];
     const groupMetadata = isGroup ? await sock.groupMetadata(from) : null;
@@ -132,9 +103,7 @@ const start = async () => {
     const groupMembers = groupMetadata?.participants || [];
     const groupAdmins = groupMembers.filter((v) => v.admin).map((v) => v.id);
     const isGroupAdmins = groupAdmins.includes(sender);
-    const botId = sock.user.id.includes(":")
-      ? sock.user.id.split(":")[0] + "@s.whatsapp.net"
-      : sock.user.id;
+    const botId = sock.user.id.includes(":") ? sock.user.id.split(":")[0] + "@s.whatsapp.net" : sock.user.id;
     const isBotGroupAdmins = groupMetadata && groupAdmins.includes(botId);
     const isOwner = ownerNumber.includes(sender);
     const isCmd = /^[°•π÷×¶∆£¢€¥®™✓_=|~!?#$%^&.+-,\\\©^]/.test(body);
@@ -145,9 +114,7 @@ const start = async () => {
       sock.sendMessage(from, { text: teks }, { quoted: msg });
     };
 
-    let command = isCmd
-      ? body.slice(1).trim().split(" ").shift().toLowerCase()
-      : "";
+    let command = isCmd ? body.slice(1).trim().split(" ").shift().toLowerCase() : "";
     let q = args.join(" ");
 
     const isImage = type === "imageMessage";
@@ -169,14 +136,8 @@ const start = async () => {
     let stream;
     if (isQuotedImage || isQuotedVideo || isQuotedAudio || isQuotedSticker) {
       mediaType = quotedType;
-      msg.message[mediaType] =
-        msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.[
-          mediaType
-        ];
-      stream = await downloadContentFromMessage(
-        msg.message[mediaType],
-        mediaType.replace("Message", "")
-      ).catch(console.error);
+      msg.message[mediaType] = msg?.message?.extendedTextMessage?.contextInfo?.quotedMessage?.[mediaType];
+      stream = await downloadContentFromMessage(msg.message[mediaType], mediaType.replace("Message", "")).catch(console.error);
     }
 
     async function youtubeSearch(query) {
@@ -278,9 +239,7 @@ const start = async () => {
     }
 
     async function shortlink(url) {
-      const res = await axios.get(
-        `https://tinyurl.com/api-create.php?url=${url}`
-      );
+      const res = await axios.get(`https://tinyurl.com/api-create.php?url=${url}`);
       return res.data;
     }
 
@@ -311,42 +270,10 @@ const start = async () => {
       };
     }
 
-    if (!isGroup && !isCmd)
-      console.log(
-        color(`[ ${time} ]`, "white"),
-        color("[ PRIVATE ]", "aqua"),
-        color(body.slice(0, 50), "white"),
-        "from",
-        color(senderNumber, "yellow")
-      );
-    if (isGroup && !isCmd)
-      console.log(
-        color(`[ ${time} ]`, "white"),
-        color("[  GROUP  ]", "aqua"),
-        color(body.slice(0, 50), "white"),
-        "from",
-        color(senderNumber, "yellow"),
-        "in",
-        color(groupName, "yellow")
-      );
-    if (!isGroup && isCmd)
-      console.log(
-        color(`[ ${time} ]`, "white"),
-        color("[ COMMAND ]", "aqua"),
-        color(body, "white"),
-        "from",
-        color(senderNumber, "yellow")
-      );
-    if (isGroup && isCmd)
-      console.log(
-        color(`[ ${time} ]`, "white"),
-        color("[ COMMAND ]", "aqua"),
-        color(body, "white"),
-        "from",
-        color(senderNumber, "yellow"),
-        "in",
-        color(groupName, "yellow")
-      );
+    if (!isGroup && !isCmd) console.log(color(`[ ${time} ]`, "white"), color("[ PRIVATE ]", "aqua"), color(body.slice(0, 50), "white"), "from", color(senderNumber, "yellow"));
+    if (isGroup && !isCmd) console.log(color(`[ ${time} ]`, "white"), color("[  GROUP  ]", "aqua"), color(body.slice(0, 50), "white"), "from", color(senderNumber, "yellow"), "in", color(groupName, "yellow"));
+    if (!isGroup && isCmd) console.log(color(`[ ${time} ]`, "white"), color("[ COMMAND ]", "aqua"), color(body, "white"), "from", color(senderNumber, "yellow"));
+    if (isGroup && isCmd) console.log(color(`[ ${time} ]`, "white"), color("[ COMMAND ]", "aqua"), color(body, "white"), "from", color(senderNumber, "yellow"), "in", color(groupName, "yellow"));
 
     switch (command) {
       case "help":
@@ -409,17 +336,9 @@ const start = async () => {
           .then((data) => {
             for (let i of data) {
               if (i.type === "video") {
-                sock.sendMessage(
-                  from,
-                  { video: { url: i.url } },
-                  { quoted: msg }
-                );
+                sock.sendMessage(from, { video: { url: i.url } }, { quoted: msg });
               } else if (i.type === "image") {
-                sock.sendMessage(
-                  from,
-                  { caption: "¯\\_(ツ)_/¯", image: { url: i.url } },
-                  { quoted: msg }
-                );
+                sock.sendMessage(from, { caption: "¯\\_(ツ)_/¯", image: { url: i.url } }, { quoted: msg });
               }
             }
           })
@@ -464,17 +383,9 @@ const start = async () => {
             .then((data) => {
               for (let i of data) {
                 if (i.type === "video") {
-                  sock.sendMessage(
-                    from,
-                    { video: { url: i.url } },
-                    { quoted: msg }
-                  );
+                  sock.sendMessage(from, { video: { url: i.url } }, { quoted: msg });
                 } else if (i.type === "image") {
-                  sock.sendMessage(
-                    from,
-                    { image: { url: i.url } },
-                    { quoted: msg }
-                  );
+                  sock.sendMessage(from, { image: { url: i.url } }, { quoted: msg });
                 }
               }
             })
@@ -506,15 +417,9 @@ const start = async () => {
         }
         reply(`Tunggu sebentar..`);
         var url = q;
-        var yt = await dl
-          .youtubedl(url)
-          .catch(async () => await dl.youtubedl(url));
+        var yt = await dl.youtubedl(url).catch(async () => await dl.youtubedl(url));
         var dl_url = await yt.audio["128kbps"].download();
-        sock.sendMessage(
-          from,
-          { image: { url: yt.thumbnail }, caption: `*${yt.title}*` },
-          { quoted: msg }
-        );
+        sock.sendMessage(from, { image: { url: yt.thumbnail }, caption: `*${yt.title}*` }, { quoted: msg });
         sock.sendMessage(
           from,
           {
@@ -532,9 +437,7 @@ const start = async () => {
         }
         reply(`Tunggu sebentar..`);
         var url = q;
-        var yt = await dl
-          .youtubedl(url)
-          .catch(async () => await dl.youtubedl(url));
+        var yt = await dl.youtubedl(url).catch(async () => await dl.youtubedl(url));
         var dl_url = await yt.video["720p"].download();
         setTimeout(() => {
           sock.sendMessage(from, {
@@ -586,11 +489,7 @@ const start = async () => {
         if (!isGroupAdmins) return reply("Hanya untuk admin grup!");
         if (!isBotGroupAdmins) return reply("Jadikan bot sebagai admin grup!");
         if (!args[1]) {
-          return reply(
-            `*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${
-              prefix + command
-            } 20 detik`
-          );
+          return reply(`*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${prefix + command} 20 detik`);
         }
         let closeTimer;
         switch (args[1]) {
@@ -607,11 +506,7 @@ const start = async () => {
             closeTimer = args[0] * 86400000;
             break;
           default:
-            return reply(
-              `*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${
-                prefix + command
-              } 20 detik`
-            );
+            return reply(`*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${prefix + command} 20 detik`);
         }
         reply(`${q} dari sekarang`);
         setTimeout(() => {
@@ -633,11 +528,7 @@ const start = async () => {
         if (!isGroup) return reply("Hanya untuk di dalam grup!");
         if (!isGroupAdmins) return reply("Hanya untuk admin grup!");
         let mem = participants.map((i) => i.id);
-        sock.sendMessage(
-          from,
-          { text: q ? q : "", mentions: mem },
-          { quoted: msg }
-        );
+        sock.sendMessage(from, { text: q ? q : "", mentions: mem }, { quoted: msg });
         break;
       case "infogc":
         if (!isGroup) {
@@ -666,11 +557,7 @@ const start = async () => {
         if (!isGroupAdmins) return reply("Hanya untuk admin grup!");
         if (!isBotGroupAdmins) return reply("Jadikan bot sebagai admin grup!");
         if (!args[1]) {
-          return reply(
-            `*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${
-              prefix + command
-            } 20 detik`
-          );
+          return reply(`*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${prefix + command} 20 detik`);
         }
         let openTimer;
         switch (args[1]) {
@@ -687,11 +574,7 @@ const start = async () => {
             openTimer = args[0] * 86400000;
             break;
           default:
-            return reply(
-              `*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${
-                prefix + command
-              } 20 detik`
-            );
+            return reply(`*Options:*\ndetik\nmenit\njam\nhari\n\n*Contoh:*\n${prefix + command} 20 detik`);
         }
         reply(`${q} dimulai dari sekarang`);
         setTimeout(() => {
@@ -729,8 +612,7 @@ const start = async () => {
         if (!isGroup) return reply("Hanya untuk di dalam grup!");
         if (!isGroupAdmins) return reply("Hanya untuk admin grup!");
         if (!isBotGroupAdmins) return reply("Jadikan bot sebagai admin grup!");
-        if (!q)
-          return reply(`Contoh:\n${prefix + command} Yanfei WhatsApp Bot`);
+        if (!q) return reply(`Contoh:\n${prefix + command} Yanfei WhatsApp Bot`);
         await sock
           .groupUpdateSubject(from, q)
           .then(() => reply("Success."))
@@ -835,17 +717,9 @@ const start = async () => {
           .map((e, i) => `     ${i + 1}. ${e.title} (${e.q})`)
           .join("\n");
         await sock.sendMessage(from, {
-          text: `*${anime.name}*\n\n${
-            anime.synopsis
-          }\n\n*Genres:*\n${anime.genres
-            .map((x) => x.name)
-            .join(", ")}\n\n*Status:*\n${anime.status}\n\n*Rating:*\n${
-            anime.rating
-          }\n\n*Episodes:*\n${episodeList}\n\n*Duration:*\n${
+          text: `*${anime.name}*\n\n${anime.synopsis}\n\n*Genres:*\n${anime.genres.map((x) => x.name).join(", ")}\n\n*Status:*\n${anime.status}\n\n*Rating:*\n${anime.rating}\n\n*Episodes:*\n${episodeList}\n\n*Duration:*\n${
             anime.duration
-          }\n\n*Release:*\n${anime.releasedAt}\n\n*Studio:*\n${
-            anime.studio
-          }\n\n*Link:*\n${anime.q}`,
+          }\n\n*Release:*\n${anime.releasedAt}\n\n*Studio:*\n${anime.studio}\n\n*Link:*\n${anime.q}`,
           quoted: msg,
           image: {
             url: anime.image,
@@ -867,9 +741,7 @@ const start = async () => {
           );
           return;
         }
-        const searchResultsText = results
-          .map((r, i) => `${i + 1}. ${r.name} (${r.url})`)
-          .join("\n\n");
+        const searchResultsText = results.map((r, i) => `${i + 1}. ${r.name} (${r.url})`).join("\n\n");
         await sock.sendMessage(from, {
           text: `*Search results for ${q}*\n\n${searchResultsText}`,
           quoted: msg,
@@ -907,9 +779,7 @@ const start = async () => {
           "VERSION:3.0\n" +
           `FN:${ownerName}\n` +
           `ORG:${botName};\n` +
-          `TEL;type=MSG;type=CELL;type=VOICE;waid=${
-            ownerNumber[ownerNumber.length - 1].split("@")[0]
-          }:+${ownerNumber[ownerNumber.length - 1].split("@")[0]}\n` +
+          `TEL;type=MSG;type=CELL;type=VOICE;waid=${ownerNumber[ownerNumber.length - 1].split("@")[0]}:+${ownerNumber[ownerNumber.length - 1].split("@")[0]}\n` +
           "END:VCARD";
         sock.sendMessage(from, {
           contacts: {
@@ -944,10 +814,7 @@ const start = async () => {
         if (!(isImage || isQuotedImage || isVideo || isQuotedVideo)) {
           return reply("Reply media!");
         }
-        let stream = await downloadContentFromMessage(
-          msg.message[mediaType],
-          mediaType.replace("Message", "")
-        );
+        let stream = await downloadContentFromMessage(msg.message[mediaType], mediaType.replace("Message", ""));
         let stickerStream = new PassThrough();
         if (isImage || isQuotedImage) {
           ffmpeg(stream)
@@ -1017,18 +884,9 @@ const start = async () => {
         break;
       case "chatgpt":
       case "ai":
-        if (!q)
-          return reply(
-            `Masukkan teksnya!\n\nContoh: ${
-              prefix + command
-            } Apa yang dimaksud dengan ChatGPT ?`
-          );
+        if (!q) return reply(`Masukkan teksnya!\n\nContoh: ${prefix + command} Apa yang dimaksud dengan ChatGPT ?`);
         axios
-          .get(
-            `https://api.lolhuman.xyz/api/openai?apikey=${apikey}&text=${encodeURIComponent(
-              q
-            )}&user=${senderNumber}`
-          )
+          .get(`https://api.lolhuman.xyz/api/openai?apikey=${apikey}&text=${encodeURIComponent(q)}&user=${senderNumber}`)
           .then(({ data }) => {
             let openai = `${data.result}`;
             reply(openai);
@@ -1052,9 +910,7 @@ const start = async () => {
         if (!isOwner) return;
         if (body.startsWith(">")) {
           try {
-            let value = await eval(
-              `(async () => { return ${body.slice(1)} })()`
-            );
+            let value = await eval(`(async () => { return ${body.slice(1)} })()`);
             await reply(format(value));
           } catch (e) {
             await reply(e);
@@ -1062,11 +918,7 @@ const start = async () => {
         }
 
         if (isCmd) {
-          reply(
-            `Sorry bro, command *${
-              prefix + command
-            }* gk ada di list *${prefix}help*`
-          );
+          reply(`Sorry bro, command *${prefix + command}* gk ada di list *${prefix}help*`);
         }
     }
   });
