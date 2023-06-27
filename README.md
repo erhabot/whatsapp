@@ -43,9 +43,10 @@
 
 ```js
 {
-    "botName": "RH WhatsApp Bot", // name of bot
-    "ownerName": "W a N", // owner name, you should add your name
-    "ownerNumber": ["6281260900707@s.whatsapp.net"] // owner number, you should add your number
+  "botName": "RH WhatsApp Bot",
+  "ownerName": "W a N",
+  "ownerNumber": ["6281260900707@s.whatsapp.net"],
+  "apikey": "" // get apikey on website (https://api.lolhuman.xyz/)
 }
 ```
 

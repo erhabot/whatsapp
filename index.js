@@ -70,7 +70,12 @@ const start = async () => {
   sock.ev.on("messages.upsert", async (m) => {
     const time = moment().tz("Asia/Jakarta").format("HH:mm:ss");
 
-    const { ownerNumber, ownerName, botName } = require("./config.json");
+    const {
+      ownerNumber,
+      ownerName,
+      botName,
+      apikey,
+    } = require("./config.json");
 
     const otakudesuUrl = "https://otakudesu.lol";
     const ods = new Odesus(otakudesuUrl);
@@ -390,6 +395,7 @@ const start = async () => {
     › ${prefix}ssweb
     › ${prefix}sticker
     › ${prefix}waifu
+    › ${prefix}chatgpt
   `);
         break;
       /* Downloader */
@@ -1008,6 +1014,29 @@ const start = async () => {
           console.error("Error:", error);
           reply("Maaf, terjadi kesalahan dalam memuat gambar waifu.");
         }
+        break;
+      case "chatgpt":
+      case "ai":
+        if (!q)
+          return reply(
+            `Masukkan teksnya!\n\nContoh: ${
+              prefix + command
+            } Apa yang dimaksud dengan ChatGPT ?`
+          );
+        axios
+          .get(
+            `https://api.lolhuman.xyz/api/openai?apikey=${apikey}&text=${encodeURIComponent(
+              q
+            )}&user=${senderNumber}`
+          )
+          .then(({ data }) => {
+            let openai = `${data.result}`;
+            reply(openai);
+          })
+          .catch((err) => {
+            let emror = `${err.message}`;
+            reply(emror);
+          });
         break;
       default:
         if (!isOwner) return;

@@ -1,5 +1,6 @@
 {
   "botName": "RH WhatsApp Bot",
   "ownerName": "W a N",
-  "ownerNumber": ["6281260900707@s.whatsapp.net"]
+  "ownerNumber": ["6281260900707@s.whatsapp.net"],
+  "apikey": "" // get apikey on website (https://api.lolhuman.xyz/)
 }
