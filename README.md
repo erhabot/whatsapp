@@ -13,9 +13,14 @@
 
 ## Windows
 
-- [`Download ffmpeg`](https://ffmpeg.org/download.html#build-windows) and set path
+- [`Download ffmpeg`](https://ffmpeg.org/download.html#build-windows)
 - [`Download Node JS`](https://nodejs.org/en/download/)
 - [`Download Git`](https://git-scm.com/downloads)
+```bash
+Add to PATH environment variable
+```
+OR
+- [`Click Here`](https://github.com/erhabot/BAHANRDP.git)
 
 ## Linux
 
