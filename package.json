@@ -4,7 +4,7 @@
   "description": "Whatsapp Bot - NodeJs",
   "main": "index.js",
   "dependencies": {
-    "baileys": "^6.0.9",
+    "@adiwajshing/baileys": "github:WhiskeySockets/Baileys#master",
     "@adiwajshing/keyed-db": "^0.2.4",
     "@bochilteam/scraper": "^4.2.3",
     "axios": "^0.27.2",
