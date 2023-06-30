@@ -1,5 +1,5 @@
 "use strict";
-const { default: WAConnection, useMultiFileAuthState, generateWAMessageFromContent, getContentType, downloadContentFromMessage, makeCacheableSignalKeyStore } = require("baileys");
+const { default: WAConnection, useMultiFileAuthState, generateWAMessageFromContent, getContentType, downloadContentFromMessage, makeCacheableSignalKeyStore } = require("@adiwajshing/baileys");
 const pino = require("pino");
 const fetch = require("node-fetch");
 const axios = require("axios");
