@@ -1,6 +1,6 @@
 {
   "name": "RH BOT",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Whatsapp Bot - NodeJs",
   "main": "index.js",
   "dependencies": {
@@ -20,6 +20,7 @@
     "moment-timezone": "^0.5.34",
     "node-fetch": "^2.6.7",
     "odesus": "^1.1.1",
+    "os": "^0.1.2",
     "path": "^0.12.7",
     "pino": "^7.0.5",
     "qrcode-terminal": "^0.12.0",
