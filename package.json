@@ -1,6 +1,6 @@
 {
   "name": "RH BOT",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "Whatsapp Bot - NodeJs",
   "main": "index.js",
   "dependencies": {

@@ -854,8 +854,17 @@ const start = async () => {
         break;
       case "shortlink":
         if (!q) return reply(`Contoh:\n${prefix + command} URL`);
-        const shortUrl = await shortlink(q);
-        reply(shortUrl);
+        reply("Menyiapkan data...");
+        const shortUrl = `https://xyros.my.id/api/shorturl?url=${encodeURIComponent(q)}`;
+        const urlQr = `https://xyros.my.id/api/qrgen?keyword=${shortUrl}`;
+        fetch(shortUrl)
+          .then((res) => res.json())
+          .then((data) => {
+            sock.sendMessage(from, { image: { url: urlQr }, caption: `${data.result}` });
+          })
+          .catch((err) => {
+            reply("Sistem sedang sibuk !", err);
+          });
         break;
       case "ssweb":
         if (!q) {
