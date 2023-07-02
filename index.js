@@ -14,6 +14,7 @@ const moment = require("moment-timezone");
 const formData = require("form-data");
 const ffmpeg = require("fluent-ffmpeg");
 const xfar = require("xfarr-api");
+const dylux = require("api-dylux");
 const path = require("path");
 const fs = require("fs");
 const { format } = require("util");
@@ -922,17 +923,18 @@ const start = async () => {
         }
         break;
       case "chatgpt":
+      case "chatai":
       case "ai":
-        if (!q) return reply(`Masukkan teksnya!\n\nContoh: ${prefix + command} Apa yang dimaksud dengan ChatGPT ?`);
-        axios
-          .get(`https://api.lolhuman.xyz/api/openai?apikey=${apikey}&text=${encodeURIComponent(q)}&user=${senderNumber}`)
-          .then(({ data }) => {
-            let openai = `${data.result}`;
-            reply(openai);
+        if (!q) {
+          return reply(`Contoh:\n${prefix + command} ChatGPT adalah ?`);
+        }
+        dylux
+          .ChatGpt(`${encodeURIComponent(q)}`)
+          .then((data) => {
+            reply(data.text);
           })
           .catch((err) => {
-            let emror = `${err.message}`;
-            reply(emror);
+            reply(err);
           });
         break;
       default:
