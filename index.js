@@ -749,44 +749,45 @@ const start = async () => {
           quoted: msg,
         });
         break;
-      case 'get': case 'fetch':
-  if (!q) {
-   return reply(`Masukkan Linknya!\n\n_*Example:*_\n\n${prefix + command} https://github.com/erhabot`);
-  }
-  if (!/^https?:\/\//.test(q)) {
-   return reply("Masukan *URL* dengan http:// atau https://");
-  }
-  var requestOptions = {
-   method: "GET",
-   redirect: "follow",
-  };
-  if (body.match(/(mp4)/gi)) {
-   fetch(`${q}`, requestOptions)
-   .then((res) => sock.sendMessage(from, { video: { url: `${q}` }, mimetype: "video/mp4", caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
-   .catch((error) => reply("error", error));
-  } else if (body.match(/(mp3)/gi)) {
-   fetch(`${q}`, requestOptions)
-   .then((res) => sock.sendMessage(from, { audio: { url: `${q}` }, mimetype: "audio/mp4", fileName: "Audio" }, { quoted: msg }))
-   .catch((error) => reply("error", error));
-  } else if (body.match(/(png)/gi)) {
-   fetch(`${q}`, requestOptions)
-   .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
-   .catch((error) => reply("error", error));
-  } else if (body.match(/(jpg)/gi)) {
-   fetch(`${q}`, requestOptions)
-   .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
-   .catch((error) => reply("error", error));
-  } else if (body.match(/(jpeg)/gi)) {
-   fetch(`${q}`, requestOptions)
-   .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
-   .catch((error) => reply("error", error));
-  } else {
-   fetch(`${q}`, requestOptions)
-   .then((response) => response.text())
-   .then((result) => reply(result))
-   .catch((error) => reply("error", error));
-  }
-  break;
+      case "get":
+      case "fetch":
+        if (!q) {
+          return reply(`Masukkan Linknya!\n\n_*Example:*_\n\n${prefix + command} https://github.com/erhabot`);
+        }
+        if (!/^https?:\/\//.test(q)) {
+          return reply("Masukan *URL* dengan http:// atau https://");
+        }
+        var requestOptions = {
+          method: "GET",
+          redirect: "follow",
+        };
+        if (body.match(/(mp4)/gi)) {
+          fetch(`${q}`, requestOptions)
+            .then((res) => sock.sendMessage(from, { video: { url: `${q}` }, mimetype: "video/mp4", caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
+            .catch((error) => reply("error", error));
+        } else if (body.match(/(mp3)/gi)) {
+          fetch(`${q}`, requestOptions)
+            .then((res) => sock.sendMessage(from, { audio: { url: `${q}` }, mimetype: "audio/mp4", fileName: "Audio" }, { quoted: msg }))
+            .catch((error) => reply("error", error));
+        } else if (body.match(/(png)/gi)) {
+          fetch(`${q}`, requestOptions)
+            .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
+            .catch((error) => reply("error", error));
+        } else if (body.match(/(jpg)/gi)) {
+          fetch(`${q}`, requestOptions)
+            .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
+            .catch((error) => reply("error", error));
+        } else if (body.match(/(jpeg)/gi)) {
+          fetch(`${q}`, requestOptions)
+            .then((res) => sock.sendMessage(from, { image: { url: `${q}` }, caption: "¯\\_(ツ)_/¯" }, { quoted: msg }))
+            .catch((error) => reply("error", error));
+        } else {
+          fetch(`${q}`, requestOptions)
+            .then((response) => response.text())
+            .then((result) => reply(result))
+            .catch((error) => reply("error", error));
+        }
+        break;
       case "infogempa":
         const { result } = await clph.info.gempa();
         const image = {
@@ -932,6 +933,23 @@ const start = async () => {
           .ChatGpt(`${encodeURIComponent(q)}`)
           .then((data) => {
             reply(data.text);
+          })
+          .catch((err) => {
+            reply(err);
+          });
+        break;
+      case "lirik":
+        if (!q) {
+          return reply(`Contoh:\n${prefix + command} Pupus`);
+        }
+        dylux
+          .lyrics(`${encodeURIComponent(q)}`)
+          .then((data) => {
+            let txt = `*Judul:* ${data.title}\n`;
+            txt += `*Artis:* ${data.artist}\n`;
+            txt += `\n`;
+            txt += `${data.lyrics}`;
+            sock.sendMessage(from, { image: { url: data.thumb }, caption: txt }, { quoted: msg });
           })
           .catch((err) => {
             reply(err);
