@@ -23,7 +23,13 @@ const { format } = require("util");
 const { PassThrough } = require("stream");
 const { watchFile } = require("fs");
 const { exec } = require("child_process");
-
+let { sizeFormatter } = require("human-readable");
+let formation = sizeFormatter({
+  std: "JEDEC",
+  decimalPlaces: 2,
+  keepTrailingZeroes: false,
+  render: (literal, symbol) => `${literal} ${symbol}B`,
+});
 const parseRes = require("./lib/parseres");
 const resolveDesuUrl = require("./lib/resolve-desu-url");
 const resolveBufferStream = require("./lib/resolve-buffer-stream");
@@ -66,7 +72,7 @@ const start = async () => {
   sock.ev.on("messages.upsert", async (m) => {
     const time = moment().tz("Asia/Jakarta").format("HH:mm:ss");
 
-    const { ownerNumber, ownerName, botName, apikey } = require("./config.json");
+    const { ownerNumber, ownerName, botName, pathimg, apikey } = require("./config.json");
 
     const otakudesuUrl = "https://otakudesu.lol";
     const ods = new Odesus(otakudesuUrl);
@@ -1013,13 +1019,13 @@ const start = async () => {
           respon += `\n`;
           respon += `🚀 RESPONS  ${latensi.toFixed(4)}\n`;
           respon += `💡 AKTIF: ${runtime(process.uptime())}\n`;
-          respon += `💾 RAM: ${format(os.totalmem() - os.freemem())} / ${format(os.totalmem())}\n`;
+          respon += `💾 RAM: ${formation(os.totalmem() - os.freemem())} / ${formation(os.totalmem())}\n`;
           respon += `💻 CPU: ${cpus.length} Core(s)\n`;
           respon += `🌐 OS: ${os.version()}\n`;
           respon += `\n`;
           respon += `_NodeJS Memory Usage_\n`;
           respon += `${Object.keys(used)
-            .map((key, _, arr) => `${key.padEnd(Math.max(...arr.map((v) => v.length)), " ")}: ${format(used[key])}`)
+            .map((key, _, arr) => `${key.padEnd(Math.max(...arr.map((v) => v.length)), " ")}: ${formation(used[key])}`)
             .join("\n")}\n\n${
             cpus[0]
               ? `_Total CPU Usage_\n${cpus[0].model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times)
@@ -1034,7 +1040,7 @@ const start = async () => {
                   .join("\n\n")}`
               : ""
           } `.trim();
-          sock.sendMessage(from, { image: { url: "https://i.ibb.co/zXGHcZs/20230627-201603.jpg" }, caption: respon });
+          sock.sendMessage(from, { image: { url: pathimg }, caption: respon });
         }
         break;
       default:
@@ -1042,7 +1048,7 @@ const start = async () => {
         if (body.startsWith("<")) {
           try {
             let value = await eval(`(async () => { ${body.slice(1)} })()`);
-            await reply(format(value));
+            await reply(formation(value));
           } catch (e) {
             await reply(e);
           }

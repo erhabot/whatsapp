@@ -2,5 +2,6 @@
   "botName": "RH WhatsApp Bot",
   "ownerName": "W a N",
   "ownerNumber": ["6281260900707@s.whatsapp.net"],
+  "pathimg": "./media/logo.jpg",
   "apikey": ""
 }
