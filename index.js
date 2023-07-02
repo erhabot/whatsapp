@@ -18,6 +18,7 @@ const dylux = require("api-dylux");
 const path = require("path");
 const fs = require("fs");
 const os = require("os");
+const speed = require("performance-now");
 const { format } = require("util");
 const { PassThrough } = require("stream");
 const { watchFile } = require("fs");
@@ -340,6 +341,7 @@ const start = async () => {
     › ${prefix}waifu
     › ${prefix}chatgpt
     › ${prefix}runtime
+    › ${prefix}ping
   `);
         break;
       /* Downloader */
@@ -972,6 +974,68 @@ const start = async () => {
         break;
       case "runtime":
         reply(`${runtime(process.uptime())}`);
+        break;
+      case "ping":
+        {
+          const used = process.memoryUsage();
+          const cpus = os.cpus().map((cpu) => {
+            cpu.total = Object.keys(cpu.times).reduce((last, type) => last + cpu.times[type], 0);
+            return cpu;
+          });
+          const cpu = cpus.reduce(
+            (last, cpu, _, { length }) => {
+              last.total += cpu.total;
+              last.speed += cpu.speed / length;
+              last.times.user += cpu.times.user;
+              last.times.nice += cpu.times.nice;
+              last.times.sys += cpu.times.sys;
+              last.times.idle += cpu.times.idle;
+              last.times.irq += cpu.times.irq;
+              return last;
+            },
+            {
+              speed: 0,
+              total: 0,
+              times: {
+                user: 0,
+                nice: 0,
+                sys: 0,
+                idle: 0,
+                irq: 0,
+              },
+            }
+          );
+          let timestamp = speed();
+          let latensi = speed() - timestamp;
+          let neww = performance.now();
+          let oldd = performance.now();
+          let respon = `Hai ${senderName} 👋🏽`;
+          respon += `\n`;
+          respon += `🚀 RESPONS  ${latensi.toFixed(4)}\n`;
+          respon += `💡 AKTIF: ${runtime(process.uptime())}\n`;
+          respon += `💾 RAM: ${format(os.totalmem() - os.freemem())} / ${format(os.totalmem())}\n`;
+          respon += `💻 CPU: ${cpus.length} Core(s)\n`;
+          respon += `🌐 OS: ${os.version()}\n`;
+          respon += `\n`;
+          respon += `_NodeJS Memory Usage_\n`;
+          respon += `${Object.keys(used)
+            .map((key, _, arr) => `${key.padEnd(Math.max(...arr.map((v) => v.length)), " ")}: ${format(used[key])}`)
+            .join("\n")}\n\n${
+            cpus[0]
+              ? `_Total CPU Usage_\n${cpus[0].model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times)
+                  .map((type) => `- *${(type + "*").padEnd(6)}: ${((100 * cpu.times[type]) / cpu.total).toFixed(2)}%`)
+                  .join("\n")}\n_CPU Core(s) Usage (${cpus.length} Core CPU)_\n${cpus
+                  .map(
+                    (cpu, i) =>
+                      `${i + 1}. ${cpu.model.trim()} (${cpu.speed} MHZ)\n${Object.keys(cpu.times)
+                        .map((type) => `- *${(type + "*").padEnd(6)}: ${((100 * cpu.times[type]) / cpu.total).toFixed(2)}%`)
+                        .join("\n")}`
+                  )
+                  .join("\n\n")}`
+              : ""
+          } `.trim();
+          sock.sendMessage(from, { image: { url: "https://i.ibb.co/zXGHcZs/20230627-201603.jpg" }, caption: respon });
+        }
         break;
       default:
         if (!isOwner) return;
